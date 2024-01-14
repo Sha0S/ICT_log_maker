@@ -1,5 +1,4 @@
 #![allow(non_snake_case)]
-#![warn(dead_code)]
 
 use rand::prelude::*;
 use std::path::PathBuf;
@@ -37,6 +36,7 @@ struct Test {
 }
 
 impl Test {
+    // generates a random measurement between a the limits if is_ok, or one between 0 and min if not.
     fn get_measurement(&self, is_ok: bool) -> f32 {
         match self.ttype {
             TType::Pin => 0.0,
@@ -93,6 +93,7 @@ struct TResult {
     measured: f32,
 }
 
+// Logfiles use 00 or 0 to sign OK tests, and 01 or 1 for NOK
 impl TResult {
     fn to_short(&self) -> &str {
         if self.ok {
@@ -117,6 +118,7 @@ struct Board {
     results: Vec<TResult>,
 }
 
+// Used only in @BTEST header
 impl Board {
     fn get_result(&self) -> &str {
         for res in &self.results {
@@ -136,13 +138,13 @@ struct MultiBoard {
 }
 
 struct MyApp {
-    output_dir: PathBuf,
+    output_dir: PathBuf, // ToDo: add directory sellection window
 
     enabled: bool,
 
-    test_yield: u8, //0-100
-    panels: u8,
-    testing_time: i64,
+    test_yield: u8, //0-100%
+    panels: u8, // how many pcbs are on a multiboard
+    testing_time: i64, // in seconds
 
     start_time: String,
     last_export: DateTime<Local>,
